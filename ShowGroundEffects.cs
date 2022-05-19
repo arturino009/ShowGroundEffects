@@ -61,26 +61,26 @@ namespace ShowGroundEffects
                             switch (bf.Name)
                             {
                                 case "ground_fire_burn" when Settings.ShowFire.Value: //burning ground
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.FireColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.FireColor);
                                     break;
                                 case "affliction_demon_cold_degen" when Settings.ShowCold.Value: //frozen ground
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.ColdColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
                                 case "ground_desecration" when Settings.ShowChaos.Value: //desecrate
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.ChaosColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
                                 case "caustic_cloud" when Settings.ShowChaos.Value: //caustic ground
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.ChaosColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
                                 case "elder_ground_spores" when Settings.ShowPhys.Value: //eldritch decay
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.PhysicalColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
                                 case "atlas_exile_crusader_aura" when Settings.ShowLight.Value: //mana rune
                                 case "atlas_exile_crusader_aura_influence" when Settings.ShowLight.Value:
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.LightningColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
                                     break;
                                 case "crimson_priest_boss_degen" when Settings.ShowPhys.Value: //blood ritual
-                                    DrawEllipseToWorld(location, positionedComponent.Size, 300, 1, Settings.PhysicalColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
                             }
                         }

@@ -8,6 +8,8 @@ namespace ShowGroundEffects
     public class Settings : ISettings
     {
         public ToggleNode Enable { get; set; } = new ToggleNode(true);
+        [Menu("Complexity of drawing")]
+        public RangeNode<int> Complexity { get; set; } = new RangeNode<int>(300, 0, 1000);
         [Menu("Fire damage")]
         public ToggleNode ShowFire { get; set; } = new ToggleNode(true);
         public ColorNode FireColor { get; set; } = new ColorNode(Color.Red);
