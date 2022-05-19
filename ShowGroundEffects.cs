@@ -67,6 +67,12 @@ namespace ShowGroundEffects
                                 case "affliction_demon_cold_degen" when Settings.ShowCold.Value: //frozen ground
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
+                                case "ground_archnemesis_coldsnap" when Settings.ShowCold.Value: //cold snap
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
+                                    break;
+                                case "ground_maelstrom_chill" when Settings.ShowCold.Value:
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
+                                    break;
                                 case "ground_desecration" when Settings.ShowChaos.Value: //desecrate
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
@@ -82,6 +88,9 @@ namespace ShowGroundEffects
                                 case "atlas_exile_crusader_aura_influence" when Settings.ShowLight.Value:
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
                                     break;
+                                case "ground_vortex_lightning" when Settings.ShowLight.Value:
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
+                                    break;
                                 case "crimson_priest_boss_degen" when Settings.ShowPhys.Value: //blood ritual
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
@@ -90,7 +99,7 @@ namespace ShowGroundEffects
                                 case "ground_consecration_enemy":
                                 case "ground_consecration":
                                 case "ground_lightning_shock":
-                                case "generic_buff_aura": /*"ground_vortex_lightning"*/
+                                case "generic_buff_aura": 
                                     break;
                                 default:
                                     if (!list.Contains(bf.Name))
