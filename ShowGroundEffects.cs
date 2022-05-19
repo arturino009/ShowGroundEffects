@@ -55,10 +55,6 @@ namespace ShowGroundEffects
                     {
                         foreach (var bf in e.Buffs)
                         {
-                            if (!list.Contains(bf.Name))
-                            {
-                                list.Add(bf.Name);
-                            }
                             var positionedComponent = e?.GetComponent<Positioned>();
                             if (positionedComponent == null) continue;
                             Vector3 location = new Vector3(positionedComponent.WorldPos.X, positionedComponent.WorldPos.Y, 0);
@@ -88,6 +84,22 @@ namespace ShowGroundEffects
                                     break;
                                 case "crimson_priest_boss_degen" when Settings.ShowPhys.Value: //blood ritual
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
+                                    break;
+                                case "ground_ice_chill":
+                                case "ground_brittle":
+                                case "ground_consecration_enemy":
+                                case "ground_consecration":
+                                case "ground_lightning_shock":
+                                case "generic_buff_aura": /*"ground_vortex_lightning"*/
+                                    break;
+                                default:
+                                    if (!list.Contains(bf.Name))
+                                    {
+                                        list.Add(bf.Name);
+                                    }
+                                    Graphics.DrawText(bf.Name, GameController.Game.IngameState.Camera.WorldToScreen(location));
+                                    var background = new RectangleF(GameController.Game.IngameState.Camera.WorldToScreen(location).X, GameController.Game.IngameState.Camera.WorldToScreen(location).Y, 150, 20);
+                                    Graphics.DrawBox(background, Color.Black);
                                     break;
                             }
                         }
