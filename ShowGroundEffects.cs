@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ExileCore;
 using ExileCore.PoEMemory.Components;
+using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
 using ImGuiNET;
 using SharpDX;
@@ -42,11 +44,14 @@ namespace ShowGroundEffects
                 {
                     return;
                 }
-                foreach (var e in GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Effect])
+                var effects = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Effect];
+                var monsters = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster];
+                var finalCollection = new ConcurrentBag<Entity>(effects.Union(monsters));
+                foreach (var e in finalCollection)
                 {
                     if (e.Path == null) continue;
                     if (e.DistancePlayer > 75) continue;
-                    if (e.Path.Contains("ground_effects"))
+                    if (e.Path.Contains("ground_effects") || e.Path.Contains("CrusaderArcaneRune"))
                     {
                         foreach (var bf in e.Buffs)
                         {
@@ -76,6 +81,8 @@ namespace ShowGroundEffects
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
                                 case "atlas_exile_crusader_aura" when Settings.ShowLight.Value: //mana rune
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
+                                    break;
                                 case "atlas_exile_crusader_aura_influence" when Settings.ShowLight.Value:
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
                                     break;
