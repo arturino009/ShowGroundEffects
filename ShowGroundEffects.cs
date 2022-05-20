@@ -67,7 +67,7 @@ namespace ShowGroundEffects
                                 case "affliction_demon_cold_degen" when Settings.ShowCold.Value: //frozen ground
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
-                                case "ground_archnemesis_coldsnap" when Settings.ShowCold.Value: //cold snap
+                                case "ground_archnemesis_cold_snap" when Settings.ShowCold.Value: //cold snap
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
                                 case "ground_maelstrom_chill" when Settings.ShowCold.Value:
@@ -94,12 +94,20 @@ namespace ShowGroundEffects
                                 case "crimson_priest_boss_degen" when Settings.ShowPhys.Value: //blood ritual
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
+                                case "ground_devouring_darkness" when Settings.ShowPhys.Value: //kitava
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
+                                    break;
+                                case "vomitous_ooze" when Settings.ShowPhys.Value: //eater of worlds
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
+                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
+                                    break;
                                 case "ground_ice_chill":
                                 case "ground_brittle":
                                 case "ground_consecration_enemy":
                                 case "ground_consecration":
                                 case "ground_lightning_shock":
-                                case "generic_buff_aura": 
+                                case "generic_buff_aura":
+                                case "ground_tar_slow":
                                     break;
                                 default:
                                     if (!list.Contains(bf.Name))
