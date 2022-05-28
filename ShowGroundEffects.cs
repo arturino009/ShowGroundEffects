@@ -45,59 +45,59 @@ namespace ShowGroundEffects
                     return;
                 }
                 var effects = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Effect];
-                var monsters = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster];
-                var finalCollection = new ConcurrentBag<Entity>(effects.Union(monsters));
-                foreach (var e in finalCollection)
+                //var monsters = GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Monster];
+                //var finalCollection = new ConcurrentBag<Entity>(effects.Union(monsters));
+                foreach (var e in effects)
                 {
                     if (e.Path == null) continue;
                     if (e.DistancePlayer > 75) continue;
-                    if (e.Path.Contains("ground_effects") || e.Path.Contains("CrusaderArcaneRune"))
+                    if (e.Path.Contains("ground_effects")) // || e.Path.Contains("CrusaderArcaneRune"))
                     {
                         foreach (var bf in e.Buffs)
                         {
                             var positionedComponent = e?.GetComponent<Positioned>();
                             if (positionedComponent == null) continue;
-                            Vector3 location = new Vector3(positionedComponent.WorldPos.X, positionedComponent.WorldPos.Y, 0);
+                            Vector3 location = new Vector3(positionedComponent.WorldPos.X, positionedComponent.WorldPos.Y, GameController.Game.IngameState.Data.LocalPlayer.Pos.Z);
                             
                             switch (bf.Name)
                             {
-                                case "ground_fire_burn" when Settings.ShowFire.Value: //burning ground
+                                case "ground_fire_burn": //burning ground
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.FireColor);
                                     break;
-                                case "affliction_demon_cold_degen" when Settings.ShowCold.Value: //frozen ground
+                                case "affliction_demon_cold_degen": //frozen ground
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
-                                case "ground_archnemesis_cold_snap" when Settings.ShowCold.Value: //cold snap
+                                case "ground_archnemesis_cold_snap": //cold snap
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
-                                case "ground_maelstrom_chill" when Settings.ShowCold.Value:
+                                case "ground_maelstrom_chill":
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
                                     break;
-                                case "ground_desecration" when Settings.ShowChaos.Value: //desecrate
+                                case "ground_desecration": //desecrate
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
-                                case "caustic_cloud" when Settings.ShowChaos.Value: //caustic ground
+                                case "caustic_cloud": //caustic ground
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
-                                case "elder_ground_spores" when Settings.ShowPhys.Value: //eldritch decay
+                                case "elder_ground_spores": //eldritch decay
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
-                                case "atlas_exile_crusader_aura" when Settings.ShowLight.Value: //mana rune
+                                //case "atlas_exile_crusader_aura" when Settings.ShowLight.Value: //mana rune
+                                //    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
+                                //    break;
+                                //case "atlas_exile_crusader_aura_influence" when Settings.ShowLight.Value:
+                                //    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
+                                //    break;
+                                case "ground_vortex_lightning":
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
                                     break;
-                                case "atlas_exile_crusader_aura_influence" when Settings.ShowLight.Value:
-                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
-                                    break;
-                                case "ground_vortex_lightning" when Settings.ShowLight.Value:
-                                    DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
-                                    break;
-                                case "crimson_priest_boss_degen" when Settings.ShowPhys.Value: //blood ritual
+                                case "crimson_priest_boss_degen": //blood ritual
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
-                                case "ground_devouring_darkness" when Settings.ShowPhys.Value: //kitava
+                                case "ground_devouring_darkness": //kitava
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     break;
-                                case "vomitous_ooze" when Settings.ShowPhys.Value: //eater of worlds
+                                case "vomitous_ooze": //eater of worlds
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
                                     DrawEllipseToWorld(location, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
                                     break;
@@ -110,13 +110,16 @@ namespace ShowGroundEffects
                                 case "ground_tar_slow":
                                     break;
                                 default:
-                                    if (!list.Contains(bf.Name))
+                                    if (Settings.DebugMode)
                                     {
-                                        list.Add(bf.Name);
+                                        if (!list.Contains(bf.Name))
+                                        {
+                                            list.Add(bf.Name);
+                                        }
+                                        Graphics.DrawText(bf.Name, GameController.Game.IngameState.Camera.WorldToScreen(location));
+                                        var background = new RectangleF(GameController.Game.IngameState.Camera.WorldToScreen(location).X, GameController.Game.IngameState.Camera.WorldToScreen(location).Y, 150, 20);
+                                        Graphics.DrawBox(background, Color.Black);
                                     }
-                                    Graphics.DrawText(bf.Name, GameController.Game.IngameState.Camera.WorldToScreen(location));
-                                    var background = new RectangleF(GameController.Game.IngameState.Camera.WorldToScreen(location).X, GameController.Game.IngameState.Camera.WorldToScreen(location).Y, 150, 20);
-                                    Graphics.DrawBox(background, Color.Black);
                                     break;
                             }
                         }
@@ -139,18 +142,18 @@ namespace ShowGroundEffects
                 plottedCirclePoints.Add(new Vector3((float)x, (float)y, vector3Pos.Z));
             }
 
-            for (var i = 0; i < plottedCirclePoints.Count; i++)
+            for (var i = 1; i < plottedCirclePoints.Count/2; i++)
             {
-                if (i >= plottedCirclePoints.Count - 1)
-                {
-                    var pointEnd1 = camera.WorldToScreen(plottedCirclePoints.Last());
-                    var pointEnd2 = camera.WorldToScreen(vector3Pos);
-                    Graphics.DrawLine(pointEnd1, pointEnd2, lineWidth, color);
-                    return;
-                }
+                //if (i >= plottedCirclePoints.Count - 1)
+                //{
+                //    var pointEnd1 = camera.WorldToScreen(plottedCirclePoints.Last());
+                //    var pointEnd2 = camera.WorldToScreen(vector3Pos);
+                //    Graphics.DrawLine(pointEnd1, pointEnd2, lineWidth, color);
+                //    return;
+                //}
 
                 var point1 = camera.WorldToScreen(plottedCirclePoints[i]);
-                var point2 = camera.WorldToScreen(vector3Pos);
+                var point2 = camera.WorldToScreen(plottedCirclePoints[plottedCirclePoints.Count - i]);
                 Graphics.DrawLine(point1, point2, lineWidth, color);
             }
         }
