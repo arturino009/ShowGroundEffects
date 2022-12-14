@@ -130,6 +130,10 @@ namespace ShowGroundEffects
         }
         public void DrawEllipseToWorld(Vector3 vector3Pos, int radius, int points, int lineWidth, Color color)
         {
+            if(radius>10000){
+                DebugWindow.LogError("Entity radius offset is wrong! Ask for the HUD team to fix it!");
+                return;
+            }
             var camera = GameController.Game.IngameState.Camera;
 
             var plottedCirclePoints = new List<Vector3>();
