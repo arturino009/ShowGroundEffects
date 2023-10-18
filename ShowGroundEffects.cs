@@ -6,6 +6,8 @@ using ImGuiNET;
 using ExileCore.PoEMemory.Components;
 using ExileCore.Shared.Enums;
 using ExileCore.PoEMemory.MemoryObjects;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 
 namespace ShowGroundEffects;
 
@@ -48,26 +50,27 @@ public class ShowGroundEffects : BaseSettingsPlugin<ShowGroundEffectsSettings>
                 {
                     var positionedComponent = e?.GetComponent<Positioned>();
                     if (positionedComponent == null) continue;
+                    var drawColor = Color.Transparent;
                     foreach (var bf in e.Buffs)
                     {
                         if (bf.Description.ToLower().Contains("fire") || bf.Description.ToLower().Contains("burning"))
                         {
-                            DrawEllipseToWorld(e, positionedComponent.Size, Settings.Complexity, 1, Settings.FireColor);
+                            drawColor = Settings.FireColor;
                         } else if (bf.Description.ToLower().Contains("cold")) 
                         {
-                            DrawEllipseToWorld(e, positionedComponent.Size, Settings.Complexity, 1, Settings.ColdColor);
+                            drawColor = Settings.ColdColor;
                         }
                         else if (bf.Description.ToLower().Contains("lightning"))
                         {
-                            DrawEllipseToWorld(e, positionedComponent.Size, Settings.Complexity, 1, Settings.LightningColor);
+                            drawColor = Settings.LightningColor;
                         }
                         else if (bf.Description.ToLower().Contains("chaos"))
                         {
-                            DrawEllipseToWorld(e, positionedComponent.Size, Settings.Complexity, 1, Settings.ChaosColor);
+                            drawColor = Settings.ChaosColor;
                         }
                         else if (bf.Description.ToLower().Contains("physical"))
                         {
-                            DrawEllipseToWorld(e, positionedComponent.Size, Settings.Complexity, 1, Settings.PhysicalColor);
+                            drawColor = Settings.PhysicalColor;
                         } else
                         {
                             if (Settings.DebugMode)
@@ -81,6 +84,10 @@ public class ShowGroundEffects : BaseSettingsPlugin<ShowGroundEffectsSettings>
                                 Graphics.DrawBox(background, Color.Black);
                             }
                         }
+                        if (drawColor != Color.Transparent)
+                        {
+                            DrawFilledCircleInWorldPosition(GameController.IngameState.Data.ToWorldWithTerrainHeight(positionedComponent.GridPosition), positionedComponent.Size, 1, drawColor);
+                        }
                     }
                 }
             }
@@ -88,30 +95,31 @@ public class ShowGroundEffects : BaseSettingsPlugin<ShowGroundEffectsSettings>
         catch { }
     }
 
-    public void DrawEllipseToWorld(Entity ent, int radius, int points, int lineWidth, Color color)
+    /// <summary>
+    /// Draws a filled circle at the specified world position with the given radius and color.
+    /// </summary>
+    /// <param name="position">The world position to draw the circle at.</param>
+    /// <param name="radius">The radius of the circle.</param>
+    /// <param name="color">The color of the circle.</param>
+    private void DrawFilledCircleInWorldPosition(Vector3 position, float radius, int thickness, Color color)
     {
-        if (radius > 10000)
+        var circlePoints = new List<Vector2>();
+        const int segments = 15;
+        const float segmentAngle = 2f * MathF.PI / segments;
+
+        for (var i = 0; i < segments; i++)
         {
-            DebugWindow.LogError("Entity radius offset is wrong! Ask for the HUD team to fix it!");
-            return;
+            var angle = i * segmentAngle;
+            var currentOffset = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * radius;
+            var nextOffset = new Vector2(MathF.Cos(angle + segmentAngle), MathF.Sin(angle + segmentAngle)) * radius;
+
+            var currentWorldPos = position + new Vector3(currentOffset, 0);
+            var nextWorldPos = position + new Vector3(nextOffset, 0);
+
+            circlePoints.Add(Camera.WorldToScreen(currentWorldPos));
+            circlePoints.Add(Camera.WorldToScreen(nextWorldPos));
         }
 
-        var plottedCirclePoints = new List<Vector3>();
-        var slice = 2 * Math.PI / points;
-        for (var i = 0; i < points; i++)
-        {
-            var angle = slice * i;
-            var x = (decimal)ent.PosNum.X + decimal.Multiply((decimal)radius, (decimal)Math.Cos(angle));
-            var y = (decimal)ent.PosNum.Y + decimal.Multiply((decimal)radius, (decimal)Math.Sin(angle));
-            //Probably have a mistake for height calculation but its close enough
-            plottedCirclePoints.Add(new Vector3((float)x, (float)y, GameController.IngameState.Data.GetTerrainHeightAt(ent.GridPosNum)));
-        }
-
-        for (var i = 1; i < plottedCirclePoints.Count / 2; i++)
-        {
-            var point1 = Camera.WorldToScreen(plottedCirclePoints[i]);
-            var point2 = Camera.WorldToScreen(plottedCirclePoints[plottedCirclePoints.Count - i]);
-            Graphics.DrawLine(point1, point2, lineWidth, color);
-        }
+        Graphics.DrawConvexPolyFilled(circlePoints.ToArray(), color);
     }
 }

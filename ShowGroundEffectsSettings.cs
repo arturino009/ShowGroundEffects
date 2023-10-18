@@ -9,8 +9,6 @@ public class ShowGroundEffectsSettings : ISettings
 {
     public ToggleNode Enable { get; set; } = new ToggleNode(false);
 
-    [Menu("Complexity of drawing")]
-    public RangeNode<int> Complexity { get; set; } = new RangeNode<int>(300, 0, 1000);
     [Menu("Render distance")]
     public RangeNode<int> RenderDistance { get; set; } = new RangeNode<int>(80, 0, 100);
     [Menu("If you want to hide an element, set the color transparency to max", 100)]
