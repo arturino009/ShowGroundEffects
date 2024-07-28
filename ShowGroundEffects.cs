@@ -49,7 +49,7 @@ public class ShowGroundEffects : BaseSettingsPlugin<ShowGroundEffectsSettings>
                 if (e.Path.Contains("ground_effects"))
                 {
                     var positionedComponent = e?.GetComponent<Positioned>();
-                    if (positionedComponent == null) continue;
+                    if (positionedComponent == null || e.Buffs == null) continue;
                     var drawColor = Color.Transparent;
                     foreach (var bf in e.Buffs)
                     {
